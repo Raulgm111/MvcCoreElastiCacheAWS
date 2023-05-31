@@ -1,8 +1,16 @@
+using Microsoft.Extensions.Options;
 using MvcCoreElastiCacheAWS.Repositories;
 using MvcCoreElastiCacheAWS.Services;
+using System.Diagnostics.Metrics;
 
 var builder = WebApplication.CreateBuilder(args);
-
+string connectioString =
+    builder.Configuration.GetConnectionString("CacheRedis");
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = connectioString;
+    options.InstanceName = "cache-coches";
+});
 // Add services to the container.
 builder.Services.AddTransient<RepositoryCoches>();
 builder.Services.AddTransient<ServiceAWSCache>();
