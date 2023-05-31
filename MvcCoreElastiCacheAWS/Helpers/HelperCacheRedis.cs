@@ -8,7 +8,7 @@ namespace MvcCoreElastiCacheAWS.Helpers
             new Lazy<ConnectionMultiplexer>(() =>
             {
                 //AQUI ES DONDE IRA LA CADENA DE CONEXION
-                return ConnectionMultiplexer.Connect("");
+                return ConnectionMultiplexer.Connect("CacheRedis");
             });
 
         public static ConnectionMultiplexer Connection
