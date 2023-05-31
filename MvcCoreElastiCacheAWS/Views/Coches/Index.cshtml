@@ -1,51 +1,22 @@
-﻿@model IEnumerable<MvcCoreElastiCacheAWS.Models.Coche>
+﻿@model List<Coche>
 
-@{
-    ViewData["Title"] = "Index";
+<h1>ElastiCache AWS Coches</h1>
+
+<a asp-controller="Coches" asp-action="Favoritos"
+   class="btn btn-warning">Mostrar Favoritos</a>
+
+@foreach (Coche car in Model)
+{
+    <div class="card" style="width: 18rem;">
+        <img src="@car.Imagen" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">@car.Marca @car.Modelo</h5>
+            <a asp-controller="Coches" asp-action="Details"
+           asp-route-id="@car.idCoche"
+           class="btn btn-primary">Details</a>
+            <a asp-controller="Coches" asp-action="SeleccionarFavorito"
+           asp-route-idcoche="@car.idCoche"
+           class="btn btn-warning">Seleccionar Favorito</a>
+        </div>
+    </div>
 }
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.idCoche)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Marca)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Modelo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Imagen)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.idCoche)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Marca)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Modelo)
-            </td>
-            <td>
-                    <img src="@Html.DisplayFor(modelItem => item.Imagen)" width="150"/>
-            </td>
-            <td>
-                    <a asp-controller="Coches" asp-action="Details" asp-route-id="@item.idCoche" class="btn btn-info"> Detalles </a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>

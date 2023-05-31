@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MvcCoreElastiCacheAWS.Models;
 using MvcCoreElastiCacheAWS.Repositories;
+using MvcCoreElastiCacheAWS.Services;
 
 namespace MvcCoreElastiCacheAWS.Controllers
 {
@@ -8,10 +9,12 @@ namespace MvcCoreElastiCacheAWS.Controllers
     {
 
         private RepositoryCoches repo;
+        private ServiceAWSCache serviceCache;
 
-        public CochesController(RepositoryCoches repo)
+        public CochesController(RepositoryCoches repo,ServiceAWSCache service)
         {
             this.repo = repo;
+            this.serviceCache = service;
         }
 
         public IActionResult Index()
@@ -24,6 +27,27 @@ namespace MvcCoreElastiCacheAWS.Controllers
         {
             Coche car = this.repo.FindCoche(id);
             return View(car);
+        }
+
+        public async Task<IActionResult> SeleccionarFavorito
+            (int idcoche)
+        {
+            //DEBEMOS BUSCAR EL COCHE A ALMACENAR DENTRO DEL XML
+            Coche car = this.repo.FindCoche(idcoche);
+            await this.serviceCache.AddCocheAsync(car);
+            return RedirectToAction("Favoritos");
+        }
+
+        public async Task<IActionResult> Favoritos()
+        {
+            List<Coche> coches = await this.serviceCache.getCochesFavoritosAsync();
+            return View(coches);
+        }
+
+        public async Task<IActionResult> EliminarFavorito(int idcoche)
+        {
+            await this.serviceCache.DeleteCocheFavoritosAsync(idcoche);
+            return RedirectToAction("Favoritos");
         }
     }
 }
